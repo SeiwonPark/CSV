@@ -18,3 +18,4 @@ print("Headers: ", data_header)
 for i in range(1, line_counter):
     print("Data", i, ":", index_list[i-1])
 print(len(index_list))
+print(index_list[2])
