@@ -25,7 +25,7 @@ def str_to_float(field, listname):
 # load and process
 fileopen = opencsv('feeds.csv')
 temperature = list()
-load = pd.DataFrame(fileopen)[2]  # temperature
+load = pd.DataFrame(fileopen)[4]  # temperature
 str_to_float(load, temperature)
 original_data = np.array(temperature)
 
@@ -43,10 +43,12 @@ n = float(len(x))
 # Performing Gradient Descent
 for i in range(epochs):
     y_hat = w * x + b
-    D_w = (-2 / n) * sum(x * (y - y_hat))  # Derivative wrt m
-    D_b = (-2 / n) * sum(y - y_hat)  # Derivative wrt c
-    w = w - lr * D_w  # Update m
-    b = b - lr * D_b  # Update c
+    D_w = (-2 / n) * sum(x * (y - y_hat))  # Derivative wrt w
+    D_b = (-2 / n) * sum(y - y_hat)  # Derivative wrt b
+    w = w - lr * D_w  # Update w
+    b = b - lr * D_b  # Update b
+    print(w)
+    print(b)
 
 print(w, b)
 
