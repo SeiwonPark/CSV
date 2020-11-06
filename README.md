@@ -1,4 +1,4 @@
-# gradient_descent   
+# CSV   
 Handling `.csv` data using linear regression algorithm
 
 **ABSTRACT**   
