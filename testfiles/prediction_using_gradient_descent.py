@@ -37,7 +37,7 @@ w = 0
 b = 0
 
 lr = 0.0001
-epochs = 1000
+epochs = 100
 n = float(len(x))
 
 # Performing Gradient Descent
@@ -55,5 +55,5 @@ print(w, b)
 # Making predictions
 y_hat = w * x + b
 plt.scatter(x, y)
-plt.plot([min(x), max(x)], [min(y_hat), max(y_hat)], color='red')  # regression line
+plt.plot([min(x), max(x)], [min(y_hat), max(y_hat)], color='red')
 plt.show()

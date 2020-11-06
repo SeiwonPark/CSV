@@ -1,15 +1,15 @@
-# create and evaluate an updated autoregressive model
+# create and evaluate a static autoregressive model
 import csv
 import re
 import numpy as np
 import pandas as pd
+from pandas import read_csv
 from matplotlib import pyplot as plt
 from statsmodels.tsa.ar_model import AutoReg
 from sklearn.metrics import mean_squared_error
 from math import sqrt
 
 
-# load dataset
 def opencsv(filename):
     f = open(filename, 'r')
     reader = csv.reader(f)
@@ -33,41 +33,30 @@ temperature = list()
 Z = pd.DataFrame(fileopen)[2]  # temperature
 str_to_float(Z, temperature)
 X = np.array(temperature)
+plt.plot(X)
+plt.show()
+plt.close()
 
-# split dataset
 train, test = X[1:len(X)//2], X[len(X)//2:]
 
 # train autoregression
-window = 250
 model = AutoReg(train, lags=250)
 model_fit = model.fit()
-coef = model_fit.params
+print('Coefficients: %s' % model_fit.params)
 
-# walk forward over time steps in test
-history = train[len(train) - window:]
-history = [history[i] for i in range(len(history))]
-predictions = list()
+# make predictions
+predictions = model_fit.predict(start=len(train), end=len(train) + len(test) - 1, dynamic=False)
 
-for t in range(len(test)):
-    length = len(history)
-    lag = [history[i] for i in range(length - window, length)]
-    y_hat = coef[0]
-    for d in range(window):
-        y_hat += coef[d + 1] * lag[window - d - 1]
-    obs = test[t]
-    predictions.append(y_hat)
-    history.append(obs)
-    print('predicted=%f,\t expected=%f' % (y_hat, obs))
+for i in range(len(predictions)):
+    print('predicted=%f,\t expected=%f' % (predictions[i], test[i]))
+
 rmse = sqrt(mean_squared_error(test, predictions))
 print('Test RMSE: %.3f' % rmse)
 
-# plot
-model_fit.plot_predict(start=len(train), end=len(train) + len(X), dynamic=False)
-plt.plot(X, label='original')
-plt.plot(predictions, color='red', linewidth=1, label='prediction')
-plt.xlabel("Entry")
-plt.ylabel("Temperature")
-plt.legend()
-plt.xlim(-100, 2500)
-plt.ylim(10, 40)
+
+# plot results
+model_fit.plot_predict(start=len(train), end=len(train) + len(test) + 200, dynamic=False)
+
+plt.plot(test, color='black')
+plt.plot(predictions, color='magenta')
 plt.show()
